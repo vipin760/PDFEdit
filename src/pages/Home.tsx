@@ -3,13 +3,13 @@ export default function Home() {
         <div className="bg-gray-100 min-h-screen">
 
             {/* HERO SECTION */}
-            <header className="bg-white shadow-sm">
+            <header className="bg-[#1e40af] shadow-sm">
                 <div className="max-w-6xl mx-auto px-6 py-10 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
+                    <h1 className="text-4xl md:text-5xl font-bold text-white">
                         The Ultimate Free PDF Toolkit
                     </h1>
 
-                    <p className="text-gray-600 mt-4 text-lg max-w-2xl mx-auto">
+                    <p className="text-white mt-4 text-lg max-w-2xl mx-auto">
                         Fast, Secure & Easy-to-use tools to manage your PDF files.
                         No Sign-up. No Watermark. Completely Free Forever.
                     </p>
@@ -47,8 +47,9 @@ export default function Home() {
                     ].map((tool, i) => (
                         <div
                             key={i}
-                            className="p-6 bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer border border-gray-200"
+                            className="p-6 bg-white rounded-xl relative shadow hover:shadow-lg transition cursor-pointer border border-gray-200 overflow-hidden"
                         >
+                            <span className="absolute left-0 bottom-0 w-1 h-full bg-[#1e40af]"></span>
                             <a href={tool.url}>
                                 <h3 className="text-lg font-semibold text-gray-800">{tool.title}</h3>
                                 <p className="text-gray-500 text-sm mt-2">
