@@ -9,6 +9,8 @@ import UnlockPDF from "../components/UnlockPDF";
 import PDFtoJPG from "../components/PDFtoJPG";
 import JPGtoPDF from "../components/JPGtoPDF";
 import RotatePDF from "../components/RotatePDF";
+import PDFtoWord from "../components/PDFtoWord";
+import PDFtoPPT from "../components/PDFtoPPT";
 // import PdfTextEditor from "../components/EditPDF";
 // (You can add other tools later)
 
@@ -25,6 +27,8 @@ export default function AppRoutes() {
         <Route path="/pdf-to-jpg" element={<PDFtoJPG />} />
         <Route path="/jpg-to-pdf" element={<JPGtoPDF />} />
         <Route path="/rotate-pdf" element={<RotatePDF />} />
+        <Route path="/pdf-to-word" element={<PDFtoWord />} />
+        <Route path="/pdf-to-ppt" element={<PDFtoPPT />} />
         {/* <Route path="/edit-pdf" element={<PdfTextEditor />} /> */}
         
 
