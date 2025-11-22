@@ -2,11 +2,10 @@ import React from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { FiUpload, FiDownload, FiImage } from "react-icons/fi";
 
-// THE ONE THAT ACTUALLY WORKS EVERY TIME — NO CONFIG NEEDED
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.js',
-    import.meta.url
-).toString();
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.min?url';
+
+// Then set the worker source
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const PDFtoJPG: React.FC = () => {
     const [file, setFile] = React.useState<File | null>(null);
@@ -16,7 +15,6 @@ const PDFtoJPG: React.FC = () => {
 
     // Track when each page has fully rendered
     const onRenderSuccess = (pageIndex: number) => {
-        console.log("pageIndex",pageIndex);
         
         setPageRenderComplete((prev: any) => {
             const next = [...prev];
@@ -27,7 +25,6 @@ const PDFtoJPG: React.FC = () => {
 
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const f = e.target.files?.[0];
-         console.log("start....");
         if (f && f.type === "application/pdf") {
             setFile(f);
             setNumPages(null);
@@ -37,50 +34,57 @@ const PDFtoJPG: React.FC = () => {
         }
     };
 
-    const convertToJPG = async () => {
-        console.log("file",file);
-        console.log("numPages",numPages);
-        console.log("converting",converting);
+const convertToJPG = async () => {
+    if (!file || !numPages || converting) return;
+
+    setConverting(true);
+
+    // Wait a tick to ensure all pages are rendered
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const canvases = document.querySelectorAll<HTMLCanvasElement>('.react-pdf__Page__canvas');
+    const baseName = file.name.replace(/\.pdf$/i, "");
+
+    // Set higher quality and resolution
+    const scale = 2; // Increase scale for better quality
+    const quality = 1; // Max quality (0 to 1)
+
+    for (let i = 0; i < numPages; i++) {
+        const canvas = canvases[i];
+        if (!canvas) continue;
+
+        // Create a new canvas with higher resolution
+        const newCanvas = document.createElement('canvas');
+        const ctx = newCanvas.getContext('2d');
+        if (!ctx) continue;
+
+        // Set higher DPI (e.g., 300 DPI)
+        const dpi = 300;
+        const scaleFactor = dpi / 96; // 96 is the standard screen DPI
+
+        newCanvas.width = canvas.width * scale * scaleFactor;
+        newCanvas.height = canvas.height * scale * scaleFactor;
+
+        // Scale and render with better quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(canvas, 0, 0, newCanvas.width, newCanvas.height);
+
+        // Convert to JPG with higher quality
+        const imageData = newCanvas.toDataURL('image/jpeg', quality);
         
-        
-        
-        if (!file || !numPages || converting) return;
+        // Create download link
+        const link = document.createElement('a');
+        link.href = imageData;
+        link.download = `${baseName}_page_${i + 1}.jpg`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
-        // Wait a tick to ensure all pages are rendered
-        setConverting(true);        
-
-        // Force a small delay to ensure rendering is complete
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        const canvases = document.querySelectorAll<HTMLCanvasElement>(
-            '.react-pdf__Page__canvas'
-        );
-
-        if (canvases.length !== numPages) {
-            alert(`Only ${canvases.length}/${numPages} pages rendered. Please wait a moment and try again.`);
-            setConverting(false);
-            return;
-        }
-
-        const baseName = file.name.replace(/\.pdf$/i, "");
-
-        canvases.forEach((canvas, i) => {
-            canvas.toBlob((blob) => {
-                if (!blob) return;
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `${baseName}_page_${i + 1}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, "image/jpeg", 0.95);
-        });
-
-        setConverting(false);
-        alert(`Successfully converted ${numPages} page(s) to JPG!`);
-    };
+    setConverting(false);
+    alert(`Successfully converted ${numPages} page(s) to high-quality JPG!`);
+};
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 p-5">

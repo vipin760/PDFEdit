@@ -7,6 +7,8 @@ import SplitPdf from "../components/Splitpdf";
 import ProtectedPDF from "../components/ProtectedPDF";
 import UnlockPDF from "../components/UnlockPDF";
 import PDFtoJPG from "../components/PDFtoJPG";
+import JPGtoPDF from "../components/JPGtoPDF";
+import RotatePDF from "../components/RotatePDF";
 // import PdfTextEditor from "../components/EditPDF";
 // (You can add other tools later)
 
@@ -21,6 +23,8 @@ export default function AppRoutes() {
         <Route path="/protect-pdf" element={<ProtectedPDF />} />
         <Route path="/unlock-pdf" element={<UnlockPDF />} />
         <Route path="/pdf-to-jpg" element={<PDFtoJPG />} />
+        <Route path="/jpg-to-pdf" element={<JPGtoPDF />} />
+        <Route path="/rotate-pdf" element={<RotatePDF />} />
         {/* <Route path="/edit-pdf" element={<PdfTextEditor />} /> */}
         
 
