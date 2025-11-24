@@ -4,7 +4,7 @@ import PdfMerge from "../components/PdfMerge";
 import CompressPDF from "../components/CompressPDF";
 // import EditPDF from "../components/EditPDF";
 import SplitPdf from "../components/Splitpdf";
-// import PdfTextEditor from "../components/EditPDF";
+import EditPDF from "../components/EditPDF";
 // (You can add other tools later)
 
 export default function AppRoutes() {
@@ -15,7 +15,7 @@ export default function AppRoutes() {
         <Route path="/merge-pdf" element={<PdfMerge />} />
         <Route path="/split-pdf" element={<SplitPdf />} />
         <Route path="/compress-pdf" element={<CompressPDF />} />
-        {/* <Route path="/edit-pdf" element={<PdfTextEditor />} /> */}
+        <Route path="/edit-pdf" element={<EditPDF />} />
         
 
         {/* Add more routes here */}
